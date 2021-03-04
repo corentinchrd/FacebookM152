@@ -74,14 +74,25 @@
 									foreach ($test as $value) {
 										$test1 = GetAllMediaFormID($value["idPost"]);
 										$message = $value["commentaire"];
+
+
 										foreach ($test1 as $value1) {
-											$image = $value1["nomMedia"] . "." . $value1["typeMedia"];
-											echo "<div class='panel panel-default'>
+											if ($value1["nomMedia"] != NULL) {
+												$image = $value1["nomMedia"] . "." . $value1["typeMedia"];
+												echo "<div class='panel panel-default'>
 													<div class='panel-thumbnail responsive' style='padding: 7px;'><img src='./uploaded_files/$image' class='img-responsive center-block' style='max-height: 100%;' ></div>
 													<div class='panel-body'>
 													<p class='lead'>$message</p>
 													</div>
 													</div>";
+											}
+											else{
+												echo "<div class='panel panel-default'>
+													<div class='panel-body'>
+													<p class='lead'>$message</p>
+													</div>
+													</div>";
+											}
 										}
 									}
 									?>

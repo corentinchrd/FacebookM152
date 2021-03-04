@@ -2,28 +2,66 @@
 include 'db\func.php';
 session_start();
 
+$MAX_FILE_SIZE = 314;
+$MAX_SIZE = 73400320;
+
+$error = '';
 $message = '';
+$fileTotal = 0;
 if (isset($_POST['btnPost']) && $_POST['btnPost'] == 'SendPost') {
-  $text = filter_input(INPUT_POST, "message", FILTER_SANITIZE_STRING);
-  $last = InsertPost($text, date("Y-m-d"));
+
+
   if (isset($_FILES) && is_array($_FILES) && count($_FILES) > 0) {
+    $text = filter_input(INPUT_POST, "message", FILTER_SANITIZE_STRING);
+    $last = InsertPost($text, date("Y-m-d"));
     // Raccourci d'écriture pour le tableau reçu
     $fichiers = $_FILES['img'];
     // Boucle itérant sur chacun des fichiers
     for ($i = 0; $i < count($fichiers['name']); $i++) {
+      $imgType = $fichiers["type"][$i];
+      $stringImgType = substr($imgType, 0, strpos($imgType, "/"));
 
-      // Action pour avoir un nom unique et ecité les personnes qui upload plusieur fois le meme nom de fichier
-      $nom_fichier = $fichiers['name'][$i];
-      $nomFichierExplode = explode(".", $nom_fichier);
-      $nomFichierMD5 = md5(time(). $nom_fichier);
-      $newNomFichier = $nomFichierMD5 . '.' . strtolower(end($nomFichierExplode));
+      if ($stringImgType == "image") {
+
+        if ($fichiers["size"][$i] > $MAX_FILE_SIZE) {
+          $error .= "Fichier trop volumineux";
+          ShowAlert($error);
+          break;
+        } else {
+          $fileTotal += $fichiers["size"][$i];
+        }
+
+        if ($fileTotal > $MAX_SIZE) {
+          $error .= "Le total de tout vos fichier est trop volumineux";
+          ShowAlert($error);
+          break;
+        } else {
+          // Action pour avoir un nom unique et evité les personnes qui upload plusieur fois le meme nom de fichier
+          $nom_fichier = $fichiers['name'][$i];
+          $nomFichierExplode = explode(".", $nom_fichier);
+          $nomFichierMD5 = md5(time() . $nom_fichier);
+          $newNomFichier = $nomFichierMD5 . '.' . strtolower(end($nomFichierExplode));
 
 
-      // Déplacement depuis le répertoire temporaire
-      move_uploaded_file($fichiers['tmp_name'][$i], 'uploaded_files/' . $newNomFichier);
-      InsertMedia(end($nomFichierExplode), $nomFichierMD5, date("Y-m-d"), $last);
+          // Déplacement depuis le répertoire temporaire
+          if (move_uploaded_file($fichiers['tmp_name'][$i], 'uploaded_files/' . $newNomFichier)) {
+            InsertMedia(end($nomFichierExplode), $nomFichierMD5, date("Y-m-d"), $last);
+          }
+        }
+      } else {
+        $error .= "mauvaise extension de fichier";
+        ShowAlert($error);
+      }
     }
+  } else {
+    $text = filter_input(INPUT_POST, "message", FILTER_SANITIZE_STRING);
+    $last = InsertPost($text, date("Y-m-d"));
   }
+}
+
+function ShowAlert($error)
+{
+  echo "<script type='text/javascript'>alert('$error');</script>";
 }
 ?>
 <html lang="en">
@@ -81,7 +119,6 @@ if (isset($_POST['btnPost']) && $_POST['btnPost'] == 'SendPost') {
               </ul>
             </nav>
           </div>
-
           <div class="padding">
             <div class="full col-sm-9">
               <div class="well">
