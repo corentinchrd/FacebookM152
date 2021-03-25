@@ -2,7 +2,7 @@
 include 'db\func.php';
 session_start();
 
-$MAX_FILE_SIZE = 314;
+$MAX_FILE_SIZE = 3145728;
 $MAX_SIZE = 73400320;
 
 $error = '';
@@ -46,6 +46,9 @@ if (isset($_POST['btnPost']) && $_POST['btnPost'] == 'SendPost') {
           // Déplacement depuis le répertoire temporaire
           if (move_uploaded_file($fichiers['tmp_name'][$i], 'uploaded_files/' . $newNomFichier)) {
             InsertMedia(end($nomFichierExplode), $nomFichierMD5, date("Y-m-d"), $last);
+          }
+          else{
+            ShowAlert("Votre fichier n'a pas pu etre upload");
           }
         }
       } else {

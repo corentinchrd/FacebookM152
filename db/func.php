@@ -2,6 +2,7 @@
 include "connect.php";
 
 function InsertPost($commentaire,$creationDate){
+    
     $sql = "INSERT INTO `post`(`commentaire`,`creationDate`,`modificationDate`)
     VALUES (:commentaire, :creatonDate, :modifDate)";
 
