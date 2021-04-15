@@ -2,7 +2,7 @@
 
 function connect(){
     static $myDb = null;
-    $dbName = "m152";
+    $dbName = "portfolio";
     $dbUser = "root";
     $dbPass = "";
     if ($myDb === null) {

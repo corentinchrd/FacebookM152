@@ -32,8 +32,8 @@ function InsertPost($commentaire, $creationDate)
 function InsertMedia($typeMedia, $nomMedia, $creationDate, $lastid)
 {
     try {
-        $sql = "INSERT INTO `media`(`typeMedia`,`nomMedia`,`creationDate`,`modificationDate`,`idPost`)
-    VALUES (:typeMedia,:nomMedia ,:creationDate,:modificationDate , $lastid)";
+        $sql = "INSERT INTO `media`(`typeMedia`,`nomMedia`,`dateDeCreation`,`idPost`)
+    VALUES (:typeMedia,:nomMedia ,:creationDate, :idPost)";
         $bd = connect();
 
         $bd->beginTransaction();
@@ -42,8 +42,9 @@ function InsertMedia($typeMedia, $nomMedia, $creationDate, $lastid)
             ':typeMedia' => $typeMedia,
             ':nomMedia' => $nomMedia,
             ':creationDate' => $creationDate,
-            ':modificationDate' => $creationDate,
+            ':idPost' => $lastid,
         ]);
+        $bd->commit();
     } catch (Exception $e) {
         $bd->rollBack();
         echo "Failed: " . $e->getMessage();

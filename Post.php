@@ -13,7 +13,7 @@ if (isset($_POST['btnPost']) && $_POST['btnPost'] == 'SendPost') {
 
   if (isset($_FILES) && is_array($_FILES) && count($_FILES) > 0) {
     $text = filter_input(INPUT_POST, "message", FILTER_SANITIZE_STRING);
-    $last = InsertPost($text, date("Y-m-d"));
+    $last = InsertPost($text, date("Y-m-$"));
     // Raccourci d'écriture pour le tableau reçu
     $fichiers = $_FILES['img'];
     // Boucle itérant sur chacun des fichiers
@@ -21,7 +21,7 @@ if (isset($_POST['btnPost']) && $_POST['btnPost'] == 'SendPost') {
       $imgType = $fichiers["type"][$i];
       $stringImgType = substr($imgType, 0, strpos($imgType, "/"));
 
-      if ($stringImgType == "image") {
+      if ($stringImgType == "image" || $stringImgType == "video" || $stringImgType == "audio") {
 
         if ($fichiers["size"][$i] > $MAX_FILE_SIZE) {
           $error .= "Fichier trop volumineux";
@@ -85,11 +85,6 @@ function ShowAlert($error)
   <div class="wrapper">
     <div class="box">
       <div class="">
-
-        <!-- sidebar -->
-
-        <!-- /sidebar -->
-
         <!-- main right col -->
         <div class="column col-sm-12 col-xs-12" id="main">
           <div class="navbar navbar-blue navbar-static-top">
@@ -131,7 +126,7 @@ function ShowAlert($error)
                   <div class="form-group"><textarea class="form-control" name="message" placeholder="Message"></textarea></div>
                   <div class="form-group">
                     <button class="btn btn-primary" type="submit" name="btnPost" value="SendPost">Publish</button>
-                    <input type="file" accept="image/png, image/jpeg" name="img[]" multiple />
+                    <input type="file" accept="image/png, image/jpeg, video/mp4, ,audio/mp3" name="img[]" multiple />
                   </div>
                 </form>
               </div>

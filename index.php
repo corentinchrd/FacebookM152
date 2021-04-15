@@ -78,9 +78,21 @@
 										echo "<div class='panel panel-default'>
 										<div class='panel-thumbnail responsive' style='padding: 7px;'>";
 										foreach ($medias as $media) {
-											if ($media["nomMedia"] != NULL) {
+											if ($media["nomMedia"] != NULL && $media["typeMedia"] == "image") {
 												$image = $media["nomMedia"] . "." . $media["typeMedia"];
 												echo "<img src='./uploaded_files/$image' class='img-responsive center-block' style='max-height: 100%; margin-top: 20px' >";
+											}
+											elseif($media["nomMedia"] != NULL && $media["typeMedia"] == "mp4"){
+												$video = $media["nomMedia"] . "." . $media["typeMedia"];
+												echo '<video width="75%" controls autoplay loop style="align:center;">'
+												.'<source class="d-block w-40" src="uploaded_files/' . $video . '" type="video/mp4"'
+												.'</video>';
+											}
+											elseif($media["nomMedia"] != NULL && $media["typeMedia"] == "mp3"){
+												$audio = $media["nomMedia"] . "." . $media["typeMedia"];
+												echo '<audio width="300px" controls>'
+												.'<source class="d-block w-100" src="uploaded_files/' . $audio . '" type="audio/mp3"'
+												.'</audio>';
 											}
 										}
 										echo "</div>
