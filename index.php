@@ -70,16 +70,16 @@
 
 									<?php
 									include_once 'db\func.php';
-									$test = GetAllPost();
-									foreach ($test as $value) {
-										$test1 = GetAllMediaFormID($value["idPost"]);
-										$message = $value["commentaire"];
+									$posts = GetAllPost();
+									foreach ($posts as $post) {
+										$medias = GetAllMediaFormID($post["idPost"]);
+										$message = $post["commentaire"];
 
 										echo "<div class='panel panel-default'>
 										<div class='panel-thumbnail responsive' style='padding: 7px;'>";
-										foreach ($test1 as $value1) {
-											if ($value1["nomMedia"] != NULL) {
-												$image = $value1["nomMedia"] . "." . $value1["typeMedia"];
+										foreach ($medias as $media) {
+											if ($media["nomMedia"] != NULL) {
+												$image = $media["nomMedia"] . "." . $media["typeMedia"];
 												echo "<img src='./uploaded_files/$image' class='img-responsive center-block' style='max-height: 100%; margin-top: 20px' >";
 											}
 										}
